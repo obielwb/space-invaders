@@ -7,9 +7,17 @@ from random import choice, randint
 from laser import Laser
 
 class SpaceInvaders:
-  def __init__(self, screen_width, screen_height):
-    player_sprite = Player((screen_width / 2, screen_height), screen_width, 5)
-    self.player = pygame.sprite.GroupSingle(player_sprite)
+  def __init__(self, screen_width, screen_height, players = 1):
+    self.players = players
+    if (self.players > 1):
+      player_sprite = Player((screen_width / 2, screen_height), screen_width, 5)
+      self.player = pygame.sprite.GroupSingle(player_sprite)
+
+      player_two_sprite = Player((screen_width / 2, screen_height), screen_width, 5, is_first_player=False)
+      self.player_two = pygame.sprite.GroupSingle(player_two_sprite)
+    else: 
+      player_sprite = Player((screen_width / 2, screen_height), screen_width, 5)
+      self.player = pygame.sprite.GroupSingle(player_sprite)
 
     # health and score setup
     self.lives = 3
@@ -124,6 +132,26 @@ class SpaceInvaders:
           self.score += 500
           laser.kill()
 
+    if self.players == 2:
+      if self.player_two.sprite.lasers:
+        for laser in self.player_two.sprite.lasers:
+          # obstacle collisions
+          if pygame.sprite.spritecollide(laser, self.blocks, True):
+            laser.kill()
+
+          # alien collisions
+          aliens_hit = pygame.sprite.spritecollide(laser, self.aliens, True)
+          if aliens_hit:
+            laser.kill()
+            self.explosion_sound.play()
+            for alien in aliens_hit: 
+              self.score += alien.points
+
+          # extra collisions
+          if pygame.sprite.spritecollide(laser, self.extra, True):
+            self.score += 500
+            laser.kill()
+
     # aliens lasers
     if self.alien_lasers:
       for laser in self.alien_lasers:
@@ -137,6 +165,14 @@ class SpaceInvaders:
           if self.lives <= 0:
             pygame.quit()
             sys.exit()
+        
+        if self.players == 2:
+          if pygame.sprite.spritecollide(laser, self.player_two, False):
+            laser.kill()
+            self.lives -= 1
+            if self.lives <= 0:
+              pygame.quit()
+              sys.exit()
 
     # aliens
     if self.aliens:
@@ -165,6 +201,9 @@ class SpaceInvaders:
 
   def run(self, screen):
     self.player.update()
+    if self.players == 2:
+      self.player_two.update()
+
     self.aliens.update(self.alien_direction)
     self.alien_lasers.update()
     self.extra.update()
@@ -177,8 +216,12 @@ class SpaceInvaders:
 
     self.victory_message(screen)
 
-    self.player.sprite.lasers.draw(screen)
     self.player.draw(screen)
+    self.player.sprite.lasers.draw(screen)
+    if (self.players == 2):
+      self.player_two.draw(screen)
+      self.player_two.sprite.lasers.draw(screen)
+
     self.blocks.draw(screen)
     self.aliens.draw(screen)
     self.alien_lasers.draw(screen)
