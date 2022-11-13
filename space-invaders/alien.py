@@ -3,9 +3,16 @@ import pygame
 class Alien(pygame.sprite.Sprite):
   def __init__(self, color, x, y):
     super().__init__()
-    file_path = 'space-invaders\graphics\\' + color + '.png'
+    file_path = './graphics/' + color + '.png'
     self.image = pygame.image.load(file_path).convert_alpha()
     self.rect = self.image.get_rect(topleft = (x, y))
+
+    if color == 'red':
+      self.points = 100;
+    elif color == 'green':
+      self.points = 200;
+    else:
+      self.points = 300;
 
   def update(self, direction):
     self.rect.x += direction
@@ -14,7 +21,7 @@ class Alien(pygame.sprite.Sprite):
 class Extra(pygame.sprite.Sprite):
   def __init__(self, side, screen_width):
     super().__init__()
-    self.image = pygame.image.load('space-invaders\graphics\extra.png').convert_alpha()
+    self.image = pygame.image.load('./graphics/extra.png').convert_alpha()
 
     if side == 'right':
       x = screen_width + 50
