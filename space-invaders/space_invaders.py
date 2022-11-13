@@ -13,10 +13,10 @@ class SpaceInvaders:
 
     # health and score setup
     self.lives = 3
-    self.live_surf = pygame.image.load('space-invaders\graphics\player.png').convert_alpha()
+    self.live_surf = pygame.image.load('./graphics/player.png').convert_alpha()
     self.live_x_start_pos = screen_width - (self.live_surf.get_size()[0] * 2 + 20)
     self.score = 0
-    self.font = pygame.font.Font('space-invaders\\font\Pixeled.ttf', 20)
+    self.font = pygame.font.Font('./font/Pixeled.ttf', 20)
 
 
     self.screen_width = screen_width
@@ -101,11 +101,15 @@ class SpaceInvaders:
           laser.kill()
 
         # alien collisions
-        if pygame.sprite.spritecollide(laser, self.aliens, True):
+        aliens_hit = pygame.sprite.spritecollide(laser, self.aliens, True)
+        if aliens_hit:
           laser.kill()
+          for alien in aliens_hit: 
+            self.score += alien.points
 
         # extra collisions
         if pygame.sprite.spritecollide(laser, self.extra, True):
+          self.score += 500
           laser.kill()
 
     # aliens lasers
@@ -136,22 +140,26 @@ class SpaceInvaders:
       x = self.live_x_start_pos + (live * (self.live_surf.get_size()[0] + 10))
       screen.blit(self.live_surf, (x, 8))
 
-  def display_score(self):
-
+  def display_score(self, screen):
+    score_surf = self.font.render(f'Score: {self.score}', False, (255, 255, 255))
+    score_rect = score_surf.get_rect(topleft = (10, -10))
+    screen.blit(score_surf, score_rect)
 
   def run(self, screen):
     self.player.update()
     self.aliens.update(self.alien_direction)
-    self.alien_position_checker()
     self.alien_lasers.update()
-    self.extra_alien_timer()
     self.extra.update()
+
+    self.alien_position_checker()
+    self.extra_alien_timer()
     self.collision_checks()
     self.display_lives(screen)
+    self.display_score(screen)
+
 
     self.player.sprite.lasers.draw(screen)
     self.player.draw(screen)
-
     self.blocks.draw(screen)
     self.aliens.draw(screen)
     self.alien_lasers.draw(screen)
