@@ -40,6 +40,10 @@ class SpaceInvaders:
     self.extra = pygame.sprite.GroupSingle()
     self.extra_spawn_time = randint(400, 800)
 
+    music = pygame.mixer.Sound('./audio/music.wav')
+    music.set_volume(0.05)
+    music.play(loops=-1)
+
   def create_obstacle(self, x_start, y_start, offset_x):
     for row_index, row in enumerate(self.shape):
       for column_index, column in enumerate(row):
