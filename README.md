@@ -31,7 +31,7 @@
   # launch the game
   $ python ./space-invaders/game.py
   ```
-  <b>Note:</b> Python is <i>required</i> in order to run Piway's Game of Life.
+  <b>Note:</b> Python is <i>required</i> in order to run the game
 
   <h2>References</h2>
   <ul>
