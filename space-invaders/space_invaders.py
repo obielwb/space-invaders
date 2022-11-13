@@ -157,6 +157,12 @@ class SpaceInvaders:
     score_rect = score_surf.get_rect(topleft = (10, -10))
     screen.blit(score_surf, score_rect)
 
+  def victory_message(self, screen):
+    if not self.aliens:
+      victory_surf = self.font.render('You win!', False, (255, 255, 255))
+      victory_rect = victory_surf.get_rect(center = (self.screen_width / 2, self.screen_height / 2))
+      screen.blit(victory_surf, victory_rect)
+
   def run(self, screen):
     self.player.update()
     self.aliens.update(self.alien_direction)
@@ -169,6 +175,7 @@ class SpaceInvaders:
     self.display_lives(screen)
     self.display_score(screen)
 
+    self.victory_message(screen)
 
     self.player.sprite.lasers.draw(screen)
     self.player.draw(screen)
