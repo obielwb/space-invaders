@@ -9,7 +9,12 @@ if __name__ == '__main__':
   screen = pygame.display.set_mode((screen_width, screen_height))
   clock = pygame.time.Clock()
 
+  pygame.display.set_caption('Space Invaders')
+  pygame.display.set_icon(pygame.image.load('./graphics/red.png'))
+
   space_invaders = SpaceInvaders(screen_width, screen_height)
+
+  # mode = 'menu'
 
   ALIENLASER = pygame.USEREVENT + 1
   pygame.time.set_timer(ALIENLASER, 800)
