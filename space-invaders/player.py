@@ -6,9 +6,9 @@ class Player(pygame.sprite.Sprite):
   def __init__(self, pos, constraint, speed, is_first_player = True):
     super().__init__()
     if is_first_player:
-      self.image = pygame.image.load('./graphics/player.png').convert_alpha()
-    else: 
-      self.image = pygame.image.load('./graphics/player2.png').convert_alpha()
+      self.image = pygame.image.load('space-invaders\\graphics\player.png').convert_alpha()
+    else:
+      self.image = pygame.image.load('space-invaders\\graphics\player2.png').convert_alpha()
 
     self.rect = self.image.get_rect(midbottom = pos)
     self.speed = speed
@@ -34,7 +34,7 @@ class Player(pygame.sprite.Sprite):
         self.shoot_laser()
         self.ready = False
         self.laser_time = pygame.time.get_ticks()
-    else: 
+    else:
       if keys[pygame.K_d]:
         self.rect.x += self.speed
       elif keys[pygame.K_a]:
