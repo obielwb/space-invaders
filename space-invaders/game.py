@@ -16,7 +16,7 @@ if __name__ == '__main__':
   space_invaders = SpaceInvaders(screen_width, screen_height, players=2)
   menu = Menu(screen_width, screen_height, screen)
 
-  mode = 'game'
+  mode = 'menu'
 
   ALIENLASER = pygame.USEREVENT + 1
   pygame.time.set_timer(ALIENLASER, 800)
