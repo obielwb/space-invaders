@@ -1,7 +1,6 @@
 import pygame, sys
 
 from space_invaders import SpaceInvaders
-from menu import Menu
 from button import Button
 
 if __name__ == '__main__':
@@ -12,7 +11,9 @@ if __name__ == '__main__':
   clock = pygame.time.Clock()
 
   pygame.display.set_caption('Space Invaders')
-  pygame.display.set_icon(pygame.image.load('space-invaders\\graphics\\red.png'))
+
+  logo = pygame.image.load('space-invaders\\graphics\\red.png')
+  pygame.display.set_icon(logo)
 
   mode = 'menu'
   players = 1
@@ -68,7 +69,6 @@ if __name__ == '__main__':
       two_player.draw()
 
       space_invaders = SpaceInvaders(screen_width, screen_height, players)
-
       screen.fill((30, 30, 30))
       pygame.display.flip()
       clock.tick(60)
