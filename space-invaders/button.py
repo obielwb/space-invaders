@@ -17,7 +17,7 @@ class Button:
 
         self.text = text
 
-        self.font = pygame.font.Font('space-invaders\\fonts\Pixeled.ttf', 24)
+        self.font = pygame.font.Font('space-invaders\\font\Pixeled.ttf', 24)
 
         self.hovering = False
 
@@ -30,7 +30,7 @@ class Button:
         self.screen.blit(text, (self.x + (self.width / 2 - text.get_width() / 2),
                          self.y + (self.height / 2 - text.get_height() / 2)))
 
-    def is_hovering(self, x, y):
+    def is_over(self, x, y):
         if x > self.x and x < self.x + self.width:
             if y > self.y and y < self.y + self.height:
                 self.hovering = True
