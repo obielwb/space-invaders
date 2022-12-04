@@ -125,7 +125,7 @@ class SpaceInvaders:
             self.extra.add(Extra(choice(['right', 'left']), self.screen_width))
             self.extra_spawn_time = randint(400, 800)
 
-    def collision_checks(self):
+    def collision_checks(self, GPIO):
         # player lasers
         if self.player.sprite.lasers:
             for laser in self.player.sprite.lasers:
@@ -139,6 +139,7 @@ class SpaceInvaders:
                 if aliens_hit:
                     laser.kill()
                     self.explosion_sound.play()
+                    GPIO.output(17, GPIO.HIGH)
                     for alien in aliens_hit:
                         self.score += alien.points
 
@@ -160,6 +161,7 @@ class SpaceInvaders:
                     if aliens_hit:
                         laser.kill()
                         self.explosion_sound.play()
+                        GPIO.output(18, GPIO.HIGH)
                         for alien in aliens_hit:
                             self.score += alien.points
 
@@ -218,7 +220,7 @@ class SpaceInvaders:
                 center=(self.screen_width / 2, self.screen_height / 2))
             screen.blit(victory_surf, victory_rect)
 
-    def run(self, screen):
+    def run(self, screen, GPIO):
         self.player.update()
         if self.players == 2:
             self.player_two.update()
@@ -229,7 +231,7 @@ class SpaceInvaders:
 
         self.alien_position_checker()
         self.extra_alien_timer()
-        self.collision_checks()
+        self.collision_checks(GPIO)
         self.display_lives(screen)
         self.display_score(screen)
 
