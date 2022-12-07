@@ -10,7 +10,7 @@ from button import Button
 
 
 class SpaceInvaders:
-    def __init__(self, screen, screen_width, screen_height, players=1):
+    def __init__(self, screen, screen_width, screen_height, GPIO, players=1):
         self.players = players
         if (self.players > 1):
             player_sprite = Player(
@@ -38,6 +38,8 @@ class SpaceInvaders:
 
         self.screen_width = screen_width
         self.screen_height = screen_height
+
+        self.GPIO = GPIO
 
         self.restart_button = Button(screen, (30, 30, 30), (255, 255, 255),
                                      screen_width / 2 - 100, screen_height / 2, 200, 60, "Restart")
@@ -152,9 +154,18 @@ class SpaceInvaders:
                 if aliens_hit:
                     laser.kill()
                     self.explosion_sound.play()
-                    # GPIO.output(17, GPIO.HIGH)
+
                     for alien in aliens_hit:
                         self.score += alien.points
+
+                        if alien.color == 'green':
+                            self.GPIO.output(17, self.GPIO.HIGH)
+
+                        elif alien.color == 'yellow':
+                            self.GPIO.output(18, self.GPIO.HIGH)
+
+                        elif alien.color == 'red':
+                            self.GPIO.output(27, self.GPIO.HIGH)
 
                 # extra collisions
                 if pygame.sprite.spritecollide(laser, self.extra, True):
@@ -174,9 +185,18 @@ class SpaceInvaders:
                     if aliens_hit:
                         laser.kill()
                         self.explosion_sound.play()
-                        # GPIO.output(18, GPIO.HIGH)
+
                         for alien in aliens_hit:
                             self.score += alien.points
+
+                            if alien.color == 'green':
+                                self.GPIO.output(17, self.GPIO.HIGH)
+
+                            elif alien.color == 'yellow':
+                                self.GPIO.output(18, self.GPIO.HIGH)
+
+                            elif alien.color == 'red':
+                                self.GPIO.output(27, self.GPIO.HIGH)
 
                     # extra collisions
                     if pygame.sprite.spritecollide(laser, self.extra, True):

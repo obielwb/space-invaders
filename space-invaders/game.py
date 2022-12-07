@@ -1,7 +1,6 @@
-from time import sleep
 import pygame
 import sys
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 from space_invaders import SpaceInvaders
 from button import Button
@@ -21,7 +20,8 @@ if __name__ == '__main__':
     mode = 'menu'
     players = 1
 
-    space_invaders = SpaceInvaders(screen_width, screen_height, players)
+    space_invaders = SpaceInvaders(
+        screen, screen_width, screen_height, GPIO, players)
 
     button_x = (screen_width / 2) - 240
     button_y = (screen_height / 2) + 40
@@ -43,13 +43,15 @@ if __name__ == '__main__':
     ALIENLASER = pygame.USEREVENT + 1
     pygame.time.set_timer(ALIENLASER, 800)
 
-    # GPIO.setmode(GPIO.BCM)
-    # GPIO.setup(17, GPIO.OUT)
-    # GPIO.setup(18, GPIO.OUT)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(17, GPIO.OUT)
+    GPIO.setup(18, GPIO.OUT)
+    GPIO.setup(27, GPIO.OUT)
 
     while True:
-        # GPIO.output(17, GPIO.LOW)
-        # GPIO.output(18, GPIO.LOW)
+        GPIO.output(17, GPIO.LOW)
+        GPIO.output(18, GPIO.LOW)
+        GPIO.output(27, GPIO.LOW)
 
         if mode == 'game':
             if space_invaders.win:
@@ -66,7 +68,7 @@ if __name__ == '__main__':
 
                     if space_invaders.restart_button.is_over(x, y):
                         space_invaders = SpaceInvaders(
-                            screen, screen_width, screen_height, players)
+                            screen, screen_width, screen_height, GPIO, players)
 
                         screen.fill((30, 30, 30))
 
@@ -76,7 +78,6 @@ if __name__ == '__main__':
 
             if space_invaders.running:
                 screen.fill((30, 30, 30))
-                # space_invaders.run(GPIO)
                 space_invaders.run()
 
                 pygame.display.flip()
@@ -100,10 +101,6 @@ if __name__ == '__main__':
                         pygame.quit()
                         sys.exit()
 
-            # GPIO.output(17, GPIO.HIGH)
-            # GPIO.output(18, GPIO.HIGH)
-            sleep(0.1)
-
             screen.fill((30, 30, 30))
 
             red = pygame.image.load('./graphics/red.png')
@@ -121,7 +118,7 @@ if __name__ == '__main__':
             screen.blit(space_invaders_text, (screen_width / 2 - 200, 240))
 
             space_invaders = SpaceInvaders(
-                screen, screen_width, screen_height, players)
+                screen, screen_width, screen_height, GPIO, players)
 
             one_player.draw()
             two_player.draw()
