@@ -20,7 +20,8 @@ if __name__ == '__main__':
     mode = 'menu'
     players = 1
 
-    space_invaders = SpaceInvaders(screen_width, screen_height, players)
+    space_invaders = SpaceInvaders(
+        screen, screen_width, screen_height, players)
 
     button_x = (screen_width / 2) - 240
     button_y = (screen_height / 2) + 40
