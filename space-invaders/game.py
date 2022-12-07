@@ -1,6 +1,6 @@
 import pygame
 import sys
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 
 from space_invaders import SpaceInvaders
 from button import Button
@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     pygame.display.set_caption('Space Invaders')
 
-    logo = pygame.image.load('space-invaders\\graphics\\red.png')
+    logo = pygame.image.load('./graphics/red.png')
     pygame.display.set_icon(logo)
 
     mode = 'menu'
@@ -36,13 +36,13 @@ if __name__ == '__main__':
     ALIENLASER = pygame.USEREVENT + 1
     pygame.time.set_timer(ALIENLASER, 800)
 
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(17, GPIO.OUT)
-    GPIO.setup(18, GPIO.OUT)
+    # GPIO.setmode(GPIO.BCM)
+    # GPIO.setup(17, GPIO.OUT)
+    # GPIO.setup(18, GPIO.OUT)
 
     while True:
-        GPIO.output(17, GPIO.LOW)
-        GPIO.output(18, GPIO.LOW)
+        # GPIO.output(17, GPIO.LOW)
+        # GPIO.output(18, GPIO.LOW)
 
         if mode == 'game':
             for event in pygame.event.get():
@@ -53,7 +53,8 @@ if __name__ == '__main__':
                     space_invaders.alien_shoot()
 
             screen.fill((30, 30, 30))
-            space_invaders.run(screen, GPIO)
+            # space_invaders.run(screen, GPIO)
+            space_invaders.run(screen)
 
             pygame.display.flip()
             clock.tick(60)

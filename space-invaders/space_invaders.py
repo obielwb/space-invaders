@@ -27,11 +27,11 @@ class SpaceInvaders:
         # health and score setup
         self.lives = 3
         self.live_surf = pygame.image.load(
-            'space-invaders\\graphics\player.png').convert_alpha()
+            './graphics/player.png').convert_alpha()
         self.live_x_start_pos = screen_width - \
             (self.live_surf.get_size()[0] * 2 + 20)
         self.score = 0
-        self.font = pygame.font.Font('space-invaders\\font\\Pixeled.ttf', 20)
+        self.font = pygame.font.Font('./font/Pixeled.ttf', 20)
 
         self.screen_width = screen_width
         self.screen_height = screen_height
@@ -57,15 +57,15 @@ class SpaceInvaders:
         self.extra_spawn_time = randint(400, 800)
 
         # Audio
-        music = pygame.mixer.Sound('space-invaders\\audio\music.wav')
+        music = pygame.mixer.Sound('./audio/music.wav')
         music.set_volume(0.05)
         music.play(loops=-1)
 
         self.laser_sound = pygame.mixer.Sound(
-            'space-invaders\\audio\laser.wav')
+            './audio/laser.wav')
         self.laser_sound.set_volume(0.1)
         self.explosion_sound = pygame.mixer.Sound(
-            'space-invaders\\audio\explosion.wav')
+            './audio/explosion.wav')
         self.explosion_sound.set_volume(0.1)
 
     def create_obstacle(self, x_start, y_start, offset_x):
@@ -220,7 +220,8 @@ class SpaceInvaders:
                 center=(self.screen_width / 2, self.screen_height / 2))
             screen.blit(victory_surf, victory_rect)
 
-    def run(self, screen, GPIO):
+    # def run(self, screen, GPIO):
+    def run(self, screen):
         self.player.update()
         if self.players == 2:
             self.player_two.update()
