@@ -6,7 +6,7 @@
   <div>
   <h2>Summary</h2>
   <p>
-    This is a game inspired by Space Invaders, an arcade video game designed by Tomohiro Nishikado and released in 1978, made in <a href="https://www.python.org/">Python</a> using <a href="https://www.pygame.org/">pygame</a>. 
+    This is a game inspired by Space Invaders, an arcade video game designed by Tomohiro Nishikado and released in 1978, made in <a href="https://www.python.org/">Python</a> using <a href="https://www.pygame.org/">pygame</a>.
   </p>
   <h2>Play</h2>
 
@@ -28,8 +28,11 @@
   # install the game's required libraries
   $ pip install -r requirements.txt
 
+  # cd into the pygame's directory
+  $ cd space-invaders
+
   # launch the game
-  $ python ./space-invaders/game.py
+  $ python game.py
   ```
   <b>Note:</b> Python is <i>required</i> in order to run the game
 
