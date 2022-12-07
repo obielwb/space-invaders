@@ -17,7 +17,7 @@ class Button:
 
         self.text = text
 
-        self.font = pygame.font.Font('space-invaders\\font\Pixeled.ttf', 24)
+        self.font = pygame.font.Font('./font/Pixeled.ttf', 20)
 
         self.hovering = False
 
