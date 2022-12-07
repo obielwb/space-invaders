@@ -1,15 +1,16 @@
+from time import sleep
 import pygame
-import sys
 
 from player import Player
 import obstacle
 from alien import Alien, Extra
 from random import choice, randint
 from laser import Laser
+from button import Button
 
 
 class SpaceInvaders:
-    def __init__(self, screen_width, screen_height, players=1):
+    def __init__(self, screen, screen_width, screen_height, players=1):
         self.players = players
         if (self.players > 1):
             player_sprite = Player(
@@ -24,6 +25,8 @@ class SpaceInvaders:
                 (screen_width / 2, screen_height), screen_width, 5)
             self.player = pygame.sprite.GroupSingle(player_sprite)
 
+        self.screen = screen
+
         # health and score setup
         self.lives = 3
         self.live_surf = pygame.image.load(
@@ -35,6 +38,12 @@ class SpaceInvaders:
 
         self.screen_width = screen_width
         self.screen_height = screen_height
+
+        self.restart_button = Button(screen, (30, 30, 30), (255, 255, 255),
+                                     screen_width / 2 - 100, screen_height / 2, 200, 60, "Restart")
+
+        self.quit_button = Button(screen, (30, 30, 30), (255, 255, 255),
+                                  screen_width / 2 - 100, screen_height / 2 + 50, 200, 60, "Quit")
 
         # Obstacle setup
         self.shape = obstacle.shape
@@ -51,6 +60,9 @@ class SpaceInvaders:
         self.alien_setup(rows=6, columns=8)
         self.alien_direction = 1
         self.alien_lasers = pygame.sprite.Group()
+
+        self.running = True
+        self.win = False
 
         # Extra setup
         self.extra = pygame.sprite.GroupSingle()
@@ -125,7 +137,8 @@ class SpaceInvaders:
             self.extra.add(Extra(choice(['right', 'left']), self.screen_width))
             self.extra_spawn_time = randint(400, 800)
 
-    def collision_checks(self, GPIO):
+    # def collision_checks(self, GPIO):
+    def collision_checks(self):
         # player lasers
         if self.player.sprite.lasers:
             for laser in self.player.sprite.lasers:
@@ -139,7 +152,7 @@ class SpaceInvaders:
                 if aliens_hit:
                     laser.kill()
                     self.explosion_sound.play()
-                    GPIO.output(17, GPIO.HIGH)
+                    # GPIO.output(17, GPIO.HIGH)
                     for alien in aliens_hit:
                         self.score += alien.points
 
@@ -161,7 +174,7 @@ class SpaceInvaders:
                     if aliens_hit:
                         laser.kill()
                         self.explosion_sound.play()
-                        GPIO.output(18, GPIO.HIGH)
+                        # GPIO.output(18, GPIO.HIGH)
                         for alien in aliens_hit:
                             self.score += alien.points
 
@@ -181,16 +194,14 @@ class SpaceInvaders:
                     laser.kill()
                     self.lives -= 1
                     if self.lives <= 0:
-                        pygame.quit()
-                        sys.exit()
+                        self.running = False
 
                 if self.players == 2:
                     if pygame.sprite.spritecollide(laser, self.player_two, False):
                         laser.kill()
                         self.lives -= 1
                         if self.lives <= 0:
-                            pygame.quit()
-                            sys.exit()
+                            self.running = False
 
         # aliens
         if self.aliens:
@@ -198,30 +209,47 @@ class SpaceInvaders:
                 pygame.sprite.spritecollide(alien, self.blocks, True)
 
                 if pygame.sprite.spritecollide(alien, self.player, True):
-                    pygame.quit()
-                    sys.exit()
+                    self.running = False
 
-    def display_lives(self, screen):
+    def game_over(self):
+        self.running = False
+        self.screen.fill((30, 30, 30))
+
+        game_over_surf = self.font.render('Game Over', False, (255, 255, 255))
+        score_surf = self.font.render(
+            f'Score: {self.score}', False, (255, 255, 255))
+        game_over_rect = game_over_surf.get_rect(
+            center=(self.screen_width / 2, self.screen_height / 2 - 100))
+        score_rect = score_surf.get_rect(
+            center=(self.screen_width / 2, self.screen_height / 2 - 50))
+        self.screen.blit(game_over_surf, game_over_rect)
+        self.screen.blit(score_surf, score_rect)
+
+        self.restart_button.draw()
+        self.quit_button.draw()
+
+    def display_lives(self):
         for live in range(self.lives - 1):
             x = self.live_x_start_pos + \
                 (live * (self.live_surf.get_size()[0] + 10))
-            screen.blit(self.live_surf, (x, 8))
+            self.screen.blit(self.live_surf, (x, 8))
 
-    def display_score(self, screen):
+    def display_score(self):
         score_surf = self.font.render(
             f'Score: {self.score}', False, (255, 255, 255))
         score_rect = score_surf.get_rect(topleft=(10, -10))
-        screen.blit(score_surf, score_rect)
+        self.screen.blit(score_surf, score_rect)
 
-    def victory_message(self, screen):
+    def victory_message(self):
         if not self.aliens:
             victory_surf = self.font.render('You win!', False, (255, 255, 255))
             victory_rect = victory_surf.get_rect(
                 center=(self.screen_width / 2, self.screen_height / 2))
-            screen.blit(victory_surf, victory_rect)
+            self.screen.blit(victory_surf, victory_rect)
+            self.win = True
 
     # def run(self, screen, GPIO):
-    def run(self, screen):
+    def run(self):
         self.player.update()
         if self.players == 2:
             self.player_two.update()
@@ -232,19 +260,26 @@ class SpaceInvaders:
 
         self.alien_position_checker()
         self.extra_alien_timer()
-        self.collision_checks(GPIO)
-        self.display_lives(screen)
-        self.display_score(screen)
+        # self.collision_checks(GPIO)
+        self.collision_checks()
+        self.display_lives()
+        self.display_score()
 
-        self.victory_message(screen)
-
-        self.player.draw(screen)
-        self.player.sprite.lasers.draw(screen)
+        self.player.draw(self.screen)
+        self.player.sprite.lasers.draw(self.screen)
         if (self.players == 2):
-            self.player_two.draw(screen)
-            self.player_two.sprite.lasers.draw(screen)
+            self.player_two.draw(self.screen)
+            self.player_two.sprite.lasers.draw(self.screen)
 
-        self.blocks.draw(screen)
-        self.aliens.draw(screen)
-        self.alien_lasers.draw(screen)
-        self.extra.draw(screen)
+        self.blocks.draw(self.screen)
+        self.aliens.draw(self.screen)
+        self.alien_lasers.draw(self.screen)
+        self.extra.draw(self.screen)
+
+        self.victory_message()
+
+        if not self.running and not self.win:
+            self.game_over()
+
+        if self.win:
+            sleep(3)

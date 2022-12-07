@@ -8,10 +8,10 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         if is_first_player:
             self.image = pygame.image.load(
-                './graphics\player.png').convert_alpha()
+                './graphics/player.png').convert_alpha()
         else:
             self.image = pygame.image.load(
-                './graphics\player2.png').convert_alpha()
+                './graphics/player2.png').convert_alpha()
 
         self.rect = self.image.get_rect(midbottom=pos)
         self.speed = speed
